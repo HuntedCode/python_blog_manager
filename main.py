@@ -51,7 +51,6 @@ def process_command(posts_list):
     accepted_commands = ["view", "search", "exit"]
     raw = input("What would you like to do? view/search/exit: ")
     command = str(raw).lower()
-    print(command)
 
     if command in accepted_commands:
         match command:
