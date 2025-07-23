@@ -1,35 +1,84 @@
+#!/usr/bin/env python3
+
 from api import fetch_posts
 
-post_feed = []
-
 class Post:
+    """Represents a blog post from JSONPlaceholder."""
 
     def __init__(self, data):
-        self.userId = data['userId']
-        self.id = data['id']
-        self.title = data['title']
-        self.body = data['body']
+        self._userId = data['userId']
+        self._id = data['id']
+        self._title = data['title']
+        self._body = data['body']
 
     def __str__(self):
-        return f"Post #{self.id}: {self.title} - by user: {self.userId}\n\n{self.body}\n"
+        return f"Post #{self._id}: {self._title} - by user: {self._userId}\n\n{self._body}\n"
     
     def get_userId(self):
-        return self.userId
+        return self._userId
     
     def get_id(self):
-        return self.id
+        return self._id
     
     def get_title(self):
-        return self.title
+        return self._title
     
     def get_body(self):
-        return self.body
+        return self._body
 
+def store_posts():
+    """Fetches and returns list of Post objects."""
 
-posts_list = fetch_posts()
-print(len(posts_list))
+    fetched_posts = fetch_posts()
+    posts_list = []
 
-if len(posts_list) > 0:
-    for item in posts_list:
+    for item in fetched_posts:
         post = Post(item)
-        print(post)
+        posts_list.append(post)
+    
+    return posts_list
+
+def display_posts(posts_list):
+    """Prints all posts in param list."""
+
+    if len(posts_list) > 0:
+        for post in posts_list:
+            print(post)
+
+def process_command(posts_list):
+    """Take user input and calls proper function to handle specific commands."""
+
+    accepted_commands = ["view", "search", "exit"]
+    raw = input("What would you like to do? view/search/exit: ")
+    command = str(raw).lower()
+    print(command)
+
+    if command in accepted_commands:
+        match command:
+            case "view":
+                display_posts(posts_list)
+            case "search":
+                search_command(posts_list)
+            case "exit":
+                return True
+
+def search_command(posts_list):
+    search_phrase = input("Enter the term you'd like to search for:")
+    found_posts = []
+
+    for post in posts_list:
+        if search_phrase in post._title:
+            found_posts.append(post)
+    
+    display_posts(found_posts)
+
+if __name__ == "__main__":
+    posts_feed = []
+    posts_feed = store_posts()
+
+    while True:
+        is_exit_command = process_command(posts_feed)
+        if is_exit_command:
+            break
+    
+
