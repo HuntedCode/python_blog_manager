@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from api import fetch_posts
 
 class Post:
@@ -56,17 +55,21 @@ def process_command(posts_list):
         match command:
             case "view":
                 display_posts(posts_list)
+                return False
             case "search":
                 search_command(posts_list)
+                return False
             case "exit":
                 return True
 
 def search_command(posts_list):
+    """Searches param Post list titles for user input search term."""
+
     search_phrase = input("Enter the term you'd like to search for:")
     found_posts = []
 
     for post in posts_list:
-        if search_phrase in post._title:
+        if str(search_phrase).lower() in post.get_title().lower():
             found_posts.append(post)
     
     display_posts(found_posts)
